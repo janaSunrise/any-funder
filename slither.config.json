@@ -1,7 +1,7 @@
 {
   "filter_paths": "node_modules",
   "solc_remaps": ["@openzeppelin=node_modules/@openzeppelin"],
-  "detectors_to_exclude": "solc-version,naming-conventions,external-function,block-timestamp",
+  "detectors_to_exclude": "solc-version,naming-conventions,external-function,block-timestamp,dead-code,missing-zero-check,low-level-calls",
   "exclude_informational": false,
   "exclude_low": false,
   "exclude_medium": false,
