@@ -1,0 +1,4 @@
+{
+    "*.sol": ["solhint"],
+    "*.{ts,tsx,json,md,sol}": ["prettier --write"]
+}
