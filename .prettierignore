@@ -1,0 +1,45 @@
+# Editor files
+.idea/
+.vscode/
+
+# dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build files
+dist/
+
+# testing
+coverage/
+
+# Misc files.
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environmental variables
+.env
+.env.local
+.env.development
+
+# Coverage
+coverage/
+coverage.json
+
+# Hardhat files
+cache/
+artifacts/
+
+# Typechain hardhat
+typechain/
+
+# Waffle build files.
+build/
+
+# Waffle flatten.
+flattened-contracts/
