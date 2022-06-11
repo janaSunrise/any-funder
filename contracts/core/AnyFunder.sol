@@ -24,6 +24,7 @@ contract AnyFunder is Ownable {
         address from;
         string message;
         uint256 amount;
+        uint256 timestamp;
     }
 
     // Maintain a history of payments, paymentIndex => payment.
@@ -58,6 +59,16 @@ contract AnyFunder is Ownable {
         return payments;
     }
 
+    function totalEarnings() public view returns (uint256) {
+        uint256 total = 0;
+
+        for (uint256 i = 0; i < _paymentCounter; i++) {
+            total += _payments[i].amount;
+        }
+
+        return total;
+    }
+
     /// @dev Pay a custom amount of specific currency.
     function payCustom(
         address userCurrency,
@@ -65,7 +76,7 @@ contract AnyFunder is Ownable {
         string memory message // Optional message to be displayed in the history.
     ) public payable {
         if (userCurrency == Constants.NATIVE_TOKEN) {
-            require(msg.value == amount, "Amount must match the value sent.");
+            require(msg.value == amount, "Amount must match value sent.");
         }
 
         // Swap currency and move them to the contract.
@@ -79,7 +90,12 @@ contract AnyFunder is Ownable {
         );
 
         // Add the payment to the history
-        _payments[_paymentCounter] = Payment(msg.sender, message, amount);
+        _payments[_paymentCounter] = Payment(
+            msg.sender,
+            message,
+            amount,
+            block.timestamp
+        );
 
         // Emit the event.
         emit PaymentMade(_payments[_paymentCounter]);

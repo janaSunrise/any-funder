@@ -3,6 +3,8 @@
   "plugins": ["prettier"],
   "rules": {
     "compiler-version": ["error", "^0.8.0"],
+    "reason-string": ["warn", 120],
+    "not-rely-on-time": "off",
     "func-visibility": [
       "error",
       {
