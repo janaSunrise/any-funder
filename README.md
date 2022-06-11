@@ -23,6 +23,9 @@ to currency handling.
 - `CurrencySwapper.sol` - The heart of this app - swapping mechanism with a lot of checks and edge case handling
   to make swapping native-erc20 tokens and vice versa easy in uniswap v3.
 
+_Psst - we're looking to add a lot of amazing features for everyone, even features such as events and
+crowdfunding!_
+
 ## 👇 Pre-requisites
 
 Ensure that you have the following tools ready and installed to use this:
