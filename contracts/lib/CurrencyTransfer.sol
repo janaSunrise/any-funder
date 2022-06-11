@@ -25,13 +25,11 @@ library CurrencyTransfer {
             return;
         }
 
-        IERC20 token = IERC20(currency);
-
         // Invoke `safeTransfer` if the contract is sending funds, else `safeTransferFrom`.
         if (from == address(this)) {
-            token.safeTransfer(to, amount);
+            IERC20(currency).safeTransfer(to, amount);
         } else {
-            token.safeTransferFrom(from, to, amount);
+            IERC20(currency).safeTransferFrom(from, to, amount);
         }
     }
 }

@@ -33,10 +33,7 @@ contract AnyFunder is Ownable {
         if (_currency == Constants.NATIVE_TOKEN) {
             CurrencyTransfer.transferNativeToken(_owner, address(this).balance);
         } else {
-            IERC20 token = IERC20(_currency);
-
-            // Get the balance of this contract.
-            uint256 balance = token.balanceOf(address(this));
+            uint256 balance = IERC20(_currency).balanceOf(address(this));
 
             if (balance > 0) {
                 CurrencyTransfer.transferERC20(
