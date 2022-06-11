@@ -9,6 +9,10 @@ contract AppRegistry is AccessControlEnumerable {
     // Mapping to hold user address => any funder contract address.
     mapping(address => address) private _applications;
 
+    // Events for the contract
+    event ApplicationRegistered(address user, address deployment);
+    event ApplicationRemoved(address user, address deployment);
+
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(OPERATOR_ROLE, msg.sender);
@@ -52,7 +56,10 @@ contract AppRegistry is AccessControlEnumerable {
             hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
             "Not authorized"
         );
+
         _applications[user] = deployment;
+
+        emit ApplicationRegistered(user, deployment);
     }
 
     function remove(address user) public existingDeployment(user, true) {
@@ -60,6 +67,9 @@ contract AppRegistry is AccessControlEnumerable {
             hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
             "Not authorized"
         );
+
         delete _applications[user];
+
+        emit ApplicationRemoved(user, _applications[user]);
     }
 }

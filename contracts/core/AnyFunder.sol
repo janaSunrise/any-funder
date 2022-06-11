@@ -69,7 +69,7 @@ contract AnyFunder is Ownable {
     }
 
     /// @dev Pay a custom amount of specific currency.
-    function payCustom(
+    function pay(
         address userCurrency,
         uint256 amount,
         string memory message // Optional message to be displayed in the history.
@@ -124,7 +124,6 @@ contract AnyFunder is Ownable {
     }
 
     // Override `transferOwnership` to change the `_owner` in this contract.
-    // This can be called when deployed separately, or only through the registry (if used).
     function transferOwnership(address newOwner) public override onlyOwner {
         _owner = payable(newOwner);
         super.transferOwnership(newOwner);
