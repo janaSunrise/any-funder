@@ -4,14 +4,20 @@ pragma solidity ^0.8.9;
 import {IWETH} from "../interfaces/IWETH.sol";
 
 library CurrencyWrapper {
+    function wrap(address wrappedCurrency, uint256 amount) internal {
+        IWETH(wrappedCurrency).deposit{value: amount}();
+    }
+
+    function unwrap(address wrappedCurrency, uint256 amount) internal {
+        IWETH(wrappedCurrency).withdraw(amount);
+    }
+
     function wrapNativeAndTransfer(address wrappedCurrency, uint256 amount)
         internal
     {
-        IWETH weth = IWETH(wrappedCurrency);
+        wrap(wrappedCurrency, amount);
 
-        weth.deposit{value: amount}();
-
-        bool success = weth.transfer(msg.sender, amount);
+        bool success = IWETH(wrappedCurrency).transfer(msg.sender, amount);
         require(success, "Unable to transfer WETH to user.");
     }
 
@@ -20,11 +26,9 @@ library CurrencyWrapper {
         uint256 amount,
         address recipient
     ) internal {
-        IWETH weth = IWETH(wrappedCurrency);
+        unwrap(wrappedCurrency, amount);
 
-        weth.withdraw(amount);
-
-        bool success = weth.transfer(recipient, amount);
+        bool success = IWETH(wrappedCurrency).transfer(recipient, amount);
         require(success, "Unable to transfer WETH to user.");
     }
 }

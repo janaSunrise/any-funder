@@ -3,10 +3,10 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
-import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 import "../lib/Constants.sol";
+import "../lib/CurrencyTransfer.sol";
 
 contract AnyFunder is Ownable {
     address payable private _owner;
@@ -31,9 +31,7 @@ contract AnyFunder is Ownable {
     // TODO: Possibly add support for payment splitters?
     function withdrawFunds() public onlyOwner {
         if (_currency == Constants.NATIVE_TOKEN) {
-            // solhint-disable-next-line avoid-low-level-calls
-            (bool success, ) = _owner.call{value: address(this).balance}("");
-            require(success, "Unable to send value to owner.");
+            CurrencyTransfer.transferNativeToken(_owner, address(this).balance);
         } else {
             IERC20 token = IERC20(_currency);
 
@@ -41,7 +39,12 @@ contract AnyFunder is Ownable {
             uint256 balance = token.balanceOf(address(this));
 
             if (balance > 0) {
-                TransferHelper.safeTransfer(_currency, _owner, balance);
+                CurrencyTransfer.transferERC20(
+                    _currency,
+                    address(this),
+                    _owner,
+                    balance
+                );
             }
         }
     }

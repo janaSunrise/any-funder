@@ -6,6 +6,7 @@ import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 
 import "./Constants.sol";
 import "./CurrencyWrapper.sol";
+import "./CurrencyTransfer.sol";
 
 library CurrencySwapper {
     function swap(
@@ -16,27 +17,36 @@ library CurrencySwapper {
         ISwapRouter router,
         address wrappedToken
     ) internal returns (uint256) {
-        bool tokenOutWrapped = tokenOut == Constants.NATIVE_TOKEN;
+        bool isTokenInNative = tokenIn == Constants.NATIVE_TOKEN;
 
-        // If the tokenIn is the same as the tokenOut, we can just transfer the amount directly.
+        // If the `tokenIn` is the same as the `tokenOut`, we can just transfer the amount directly.
         if (tokenIn == tokenOut) {
-            TransferHelper.safeTransferFrom(
-                tokenIn,
-                msg.sender,
-                recipient,
-                amount
-            );
+            if (isTokenInNative) {
+                CurrencyTransfer.transferNativeToken(recipient, amount);
+            } else {
+                CurrencyTransfer.transferERC20(
+                    tokenIn,
+                    msg.sender,
+                    recipient,
+                    amount
+                );
+            }
 
             return amount;
         }
 
-        // If the tokenIn is `NATIVE_TOKEN`, wrapping is required.
-        if (tokenIn == Constants.NATIVE_TOKEN) {
+        // The `tokenOut` is set to wrapped if `NATIVE_TOKEN` is passed in.
+        bool tokenOutWrapped = tokenOut == Constants.NATIVE_TOKEN;
+        address actualRecipient = recipient; // Keep track of actual recipient to send the unwrapped native.
+
+        // If the `tokenIn` is `NATIVE_TOKEN`, wrapping is required.
+        if (isTokenInNative) {
             CurrencyWrapper.wrapNativeAndTransfer(wrappedToken, amount);
         }
 
-        // If the tokenOut is native currency, make it wrapped token.
-        // And, change the recipient to the current contract
+        // Wrap `tokenOut` aswell if it's `NATIVE_TOKEN`.
+        // And change the recipient to the current contract in order to unwrap.
+        // If it's set as WETH by the user already, the contract doesn't need to unwrap and transfer
         if (tokenOutWrapped) {
             tokenOut = wrappedToken;
             recipient = address(this);
@@ -68,12 +78,13 @@ library CurrencySwapper {
 
         uint256 amountOut = router.exactInputSingle(params);
 
-        // If tokenOut is wrapped, unwrap and send to user.
+        // If `tokenOutWrapped` is true, unwrap and send to actual recipient before modifying
+        // the `recipient` to the contract.
         if (tokenOutWrapped && recipient != address(this)) {
             CurrencyWrapper.unwrapNativeAndTransfer(
                 wrappedToken,
                 amountOut,
-                recipient
+                actualRecipient
             );
         }
 
