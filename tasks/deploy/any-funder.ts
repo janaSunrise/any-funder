@@ -21,5 +21,5 @@ task('deploy:AnyFunder')
 
     await funder.deployed();
 
-    console.log('AnyFunder deployed to: ', funder.address);
+    console.log('AnyFunder deployed to:', funder.address);
   });
