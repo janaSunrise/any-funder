@@ -48,6 +48,16 @@ contract AnyFunder is Ownable {
         return _currency;
     }
 
+    function paymentsHistory() public view returns (Payment[] memory) {
+        Payment[] memory payments = new Payment[](_paymentCounter);
+
+        for (uint256 i = 0; i < _paymentCounter; i++) {
+            payments[i] = _payments[i];
+        }
+
+        return payments;
+    }
+
     /// @dev Pay a custom amount of specific currency.
     function payCustom(
         address userCurrency,
