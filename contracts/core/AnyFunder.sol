@@ -44,7 +44,6 @@ contract AnyFunder is Ownable {
         _swapRouter = swapRouter;
     }
 
-    // Getter functions
     function currency() public view returns (address) {
         return _currency;
     }
