@@ -18,13 +18,7 @@ contract AppRegistry is AccessControlEnumerable {
         _setupRole(OPERATOR_ROLE, msg.sender);
     }
 
-    modifier isValidParams(address user, address deployment) {
-        require(user != address(0), "User cant be zero address");
-        require(deployment != address(0), "Deployment cant be zero address");
-        _;
-    }
-
-    modifier existingDeployment(address user, bool exists) {
+    modifier deploymentExists(address user, bool exists) {
         require(
             exists == (_applications[user] != address(0)),
             "Deployment not found"
@@ -40,7 +34,7 @@ contract AppRegistry is AccessControlEnumerable {
     function getUserDeployment(address user)
         public
         view
-        existingDeployment(user, true)
+        deploymentExists(user, true)
         returns (address)
     {
         return _applications[user];
@@ -48,8 +42,7 @@ contract AppRegistry is AccessControlEnumerable {
 
     function add(address user, address deployment)
         public
-        isValidParams(user, deployment)
-        existingDeployment(user, false)
+        deploymentExists(user, false)
         isContract(deployment)
     {
         require(
@@ -62,14 +55,16 @@ contract AppRegistry is AccessControlEnumerable {
         emit ApplicationRegistered(user, deployment);
     }
 
-    function remove(address user) public existingDeployment(user, true) {
+    function remove(address user) public deploymentExists(user, true) {
         require(
             hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
             "Not authorized"
         );
 
+        address app = _applications[user];
+
         delete _applications[user];
 
-        emit ApplicationRemoved(user, _applications[user]);
+        emit ApplicationRemoved(user, app);
     }
 }
