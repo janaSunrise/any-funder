@@ -18,7 +18,7 @@ library CurrencyWrapper {
         wrap(wrappedCurrency, amount);
 
         bool success = IWETH(wrappedCurrency).transfer(msg.sender, amount);
-        require(success, "Unable to transfer WETH to user.");
+        require(success, "CurrencyWrapper: Unable to transfer WETH to user.");
     }
 
     function unwrapNativeAndTransfer(
@@ -29,6 +29,6 @@ library CurrencyWrapper {
         unwrap(wrappedCurrency, amount);
 
         bool success = IWETH(wrappedCurrency).transfer(recipient, amount);
-        require(success, "Unable to transfer WETH to user.");
+        require(success, "CurrencyWrapper: Unable to transfer WETH to user.");
     }
 }

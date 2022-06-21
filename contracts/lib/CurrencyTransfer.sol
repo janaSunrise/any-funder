@@ -12,7 +12,7 @@ library CurrencyTransfer {
     function transferNativeToken(address to, uint256 amount) internal {
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = to.call{value: amount}("");
-        require(success, "Unable to send value to user.");
+        require(success, "CurrencyTransfer: Unable to send value to user.");
     }
 
     function transferERC20(

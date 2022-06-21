@@ -51,8 +51,12 @@ contract AnyFunder is Ownable {
     function paymentsHistory() public view returns (Payment[] memory) {
         Payment[] memory payments = new Payment[](_paymentCounter);
 
-        for (uint256 i = 0; i < _paymentCounter; i++) {
+        for (uint256 i = 0; i < _paymentCounter; ) {
             payments[i] = _payments[i];
+
+            unchecked {
+                i++;
+            }
         }
 
         return payments;
@@ -61,8 +65,12 @@ contract AnyFunder is Ownable {
     function totalEarnings() public view returns (uint256) {
         uint256 total = 0;
 
-        for (uint256 i = 0; i < _paymentCounter; i++) {
+        for (uint256 i = 0; i < _paymentCounter; ) {
             total += _payments[i].amount;
+
+            unchecked {
+                i++;
+            }
         }
 
         return total;
@@ -75,7 +83,10 @@ contract AnyFunder is Ownable {
         string memory message // Optional message to be displayed in the history.
     ) public payable {
         if (userCurrency == Constants.NATIVE_TOKEN) {
-            require(msg.value == amount, "Amount must match value sent.");
+            require(
+                msg.value == amount,
+                "AnyFunder: Amount must match value sent."
+            );
         }
 
         // Swap currency and move them to the contract.

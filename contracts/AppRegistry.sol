@@ -21,13 +21,16 @@ contract AppRegistry is AccessControlEnumerable {
     modifier deploymentExists(address user, bool exists) {
         require(
             exists == (_applications[user] != address(0)),
-            "Deployment not found"
+            "AppRegistry: Deployment not found"
         );
         _;
     }
 
     modifier isContract(address _address) {
-        require(_address.code.length > 0, "Address is not a contract");
+        require(
+            _address.code.length > 0,
+            "AppRegistry: Address is not a contract"
+        );
         _;
     }
 
@@ -47,7 +50,7 @@ contract AppRegistry is AccessControlEnumerable {
     {
         require(
             hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
-            "Not authorized"
+            "AppRegistry: Not authorized"
         );
 
         _applications[user] = deployment;
@@ -58,7 +61,7 @@ contract AppRegistry is AccessControlEnumerable {
     function remove(address user) public deploymentExists(user, true) {
         require(
             hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
-            "Not authorized"
+            "AppRegistry: Not authorized"
         );
 
         address app = _applications[user];
