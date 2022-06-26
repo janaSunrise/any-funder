@@ -62,7 +62,7 @@ contract AnyFunder is Ownable {
         return payments;
     }
 
-    function totalEarnings() public view returns (uint256) {
+    function totalPaymentReceived() public view returns (uint256) {
         uint256 total = 0;
 
         for (uint256 i = 0; i < _paymentCounter; ) {
