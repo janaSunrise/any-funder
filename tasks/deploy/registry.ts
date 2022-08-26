@@ -3,7 +3,7 @@ import { task } from 'hardhat/config';
 import type { TaskArguments } from 'hardhat/types';
 
 task('deploy:AppRegistry').setAction(
-  async (taskArguments: TaskArguments, { ethers }) => {
+  async (_taskArguments: TaskArguments, { ethers }) => {
     const signers = await ethers.getSigners();
 
     const AppRegistry = await ethers.getContractFactory('AppRegistry');

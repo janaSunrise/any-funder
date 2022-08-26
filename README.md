@@ -7,7 +7,7 @@ Decentralized sponsorship and funding app for anyone. ✨
 This project ships with 2 main contracts,
 
 - `AppRegistry.sol` - This is the registry if you're making a funding app to support multiple users
-  and handle their contract loading and unloading.
+  and handle their contract deployment and unloading.
 - `AnyFunder.sol` - This is the main app that is used on per-user basis. It has functions to pay an user in any
   currency you like and it's automatically swapped (thanks to uniswap protocols!) to the currency specified by
   the owner. And, you can withdraw all the funds that you have (native token/erc20) using the withdraw function.

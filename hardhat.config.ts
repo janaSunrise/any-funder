@@ -53,18 +53,24 @@ const chainInfo: Record<string, RpcAndChainId> = {
     rpcUrl: `https://polygon-mumbai.g.alchemy.com/v2/${alchemyKey}`
   },
 
-  // Avax
-  avax: { chainId: 43114, rpcUrl: 'https://api.avax.network/ext/bc/C/rpc' },
-  avax_testnet: {
-    chainId: 43113,
-    rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc'
+  // Optimism
+  optimism: {
+    chainId: 10,
+    rpcUrl: `https://opt-mainnet.g.alchemy.com/v2/${alchemyKey}`
+  },
+  optimism_testnet: {
+    chainId: 69,
+    rpcUrl: `https://opt-kovan.g.alchemy.com/v2/${alchemyKey}`
   },
 
-  // Fantom
-  fantom: { chainId: 250, rpcUrl: 'https://rpc.ftm.tools' },
-  fantom_testnet: {
-    chainId: 4002,
-    rpcUrl: 'https://rpc.testnet.fantom.network'
+  // Arbitrum
+  arbitrum: {
+    chainId: 42161,
+    rpcUrl: `https://arb-mainnet.g.alchemy.com/v2/${alchemyKey}`
+  },
+  arbitrum_testnet: {
+    chainId: 421611,
+    rpcUrl: `https://arb-rinkeby.g.alchemy.com/v2/${alchemyKey}`
   }
 };
 
@@ -125,13 +131,13 @@ if (accountPrivateKey) {
     polygon: generateNetworkConfig('polygon'),
     mumbai: generateNetworkConfig('mumbai'),
 
-    // Avax
-    avax: generateNetworkConfig('avax'),
-    avax_testnet: generateNetworkConfig('avax_testnet'),
+    // Optimism
+    optimism: generateNetworkConfig('optimism'),
+    optimism_testnet: generateNetworkConfig('optimism_testnet'),
 
-    // Fantom
-    fantom: generateNetworkConfig('fantom'),
-    fantom_testnet: generateNetworkConfig('fantom_testnet')
+    // Arbitrum
+    arbitrum: generateNetworkConfig('arbitrum'),
+    arbitrum_testnet: generateNetworkConfig('arbitrum_testnet')
   };
 }
 

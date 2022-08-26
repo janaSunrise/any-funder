@@ -34,6 +34,14 @@ contract AppRegistry is AccessControlEnumerable {
         _;
     }
 
+    modifier isOperatorOrOwner(address user) {
+        require(
+            hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
+            "AppRegistry: Not authorized"
+        );
+        _;
+    }
+
     function getUserDeployment(address user)
         public
         view
@@ -47,23 +55,18 @@ contract AppRegistry is AccessControlEnumerable {
         public
         deploymentExists(user, false)
         isContract(deployment)
+        isOperatorOrOwner(user)
     {
-        require(
-            hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
-            "AppRegistry: Not authorized"
-        );
-
         _applications[user] = deployment;
 
         emit ApplicationRegistered(user, deployment);
     }
 
-    function remove(address user) public deploymentExists(user, true) {
-        require(
-            hasRole(OPERATOR_ROLE, msg.sender) || msg.sender == user,
-            "AppRegistry: Not authorized"
-        );
-
+    function remove(address user)
+        public
+        deploymentExists(user, true)
+        isOperatorOrOwner(user)
+    {
         address app = _applications[user];
 
         delete _applications[user];

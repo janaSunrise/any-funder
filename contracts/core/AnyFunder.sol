@@ -85,7 +85,7 @@ contract AnyFunder is Ownable {
         if (userCurrency == Constants.NATIVE_TOKEN) {
             require(
                 msg.value == amount,
-                "AnyFunder: Amount must match value sent."
+                "AnyFunder: Amount must match value sent"
             );
         }
 
@@ -99,7 +99,6 @@ contract AnyFunder is Ownable {
             _wrappedToken
         );
 
-        // Add the payment to the history
         _payments[_paymentCounter] = Payment(
             msg.sender,
             message,
@@ -107,7 +106,6 @@ contract AnyFunder is Ownable {
             block.timestamp
         );
 
-        // Emit the event.
         emit PaymentMade(_payments[_paymentCounter]);
 
         unchecked {
