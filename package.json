@@ -1,7 +1,7 @@
 {
   "name": "any-funder",
   "version": "1.0.0",
-  "description": "Decentralized sponsorship and funding app for anyone",
+  "description": "Decentralized sponsorship app for everyone",
   "files": [
     "contracts/",
     "abis/"

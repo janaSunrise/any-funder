@@ -10,10 +10,11 @@ import "../lib/CurrencySwapper.sol";
 import "../lib/CurrencyTransfer.sol";
 
 contract AnyFunder is Ownable {
-    address payable private _owner;
+    address private _owner;
+    address payable private _paymentReceiver;
 
-    address private _currency;
-    address private _wrappedToken;
+    address private _currency; // The currency payment receiver receives the payment in.
+    address private _wrappedToken; // The wrapped token for the specific chain. Eg, WETH for ETH.
 
     ISwapRouter private immutable _swapRouter;
 
@@ -31,14 +32,26 @@ contract AnyFunder is Ownable {
     mapping(uint256 => Payment) private _payments;
 
     // Events to be emitted.
-    event PaymentMade(Payment payment);
+    event PaymentDone(Payment payment);
 
     constructor(
+        address paymentReceiver,
         address currency_,
         address wrappedToken,
         ISwapRouter swapRouter
     ) {
-        _owner = payable(msg.sender);
+        // Payment receiver receives the payment.
+        // Can be an address, payment splitter or any kind of contract.
+        if (paymentReceiver == address(0)) {
+            _paymentReceiver = payable(msg.sender);
+        } else {
+            _paymentReceiver = payable(paymentReceiver);
+        }
+
+        // Owner is used for permissions.
+        // Ensuring some of the functions are limited to the contract owner (who deployed the contract).
+        _owner = msg.sender;
+
         _currency = currency_;
         _wrappedToken = wrappedToken;
         _swapRouter = swapRouter;
@@ -85,7 +98,7 @@ contract AnyFunder is Ownable {
         if (userCurrency == Constants.NATIVE_TOKEN) {
             require(
                 msg.value == amount,
-                "AnyFunder: Amount must match value sent"
+                "AnyFunder: Amount must match msg.value"
             );
         }
 
@@ -106,7 +119,7 @@ contract AnyFunder is Ownable {
             block.timestamp
         );
 
-        emit PaymentMade(_payments[_paymentCounter]);
+        emit PaymentDone(_payments[_paymentCounter]);
 
         unchecked {
             _paymentCounter += 1;
@@ -114,10 +127,12 @@ contract AnyFunder is Ownable {
     }
 
     /// @dev Withdraw all funds from the contract.
-    // TODO: Possibly add support for payment splitters?
     function withdrawFunds() public onlyOwner {
         if (_currency == Constants.NATIVE_TOKEN) {
-            CurrencyTransfer.transferNativeToken(_owner, address(this).balance);
+            CurrencyTransfer.transferNativeToken(
+                _paymentReceiver,
+                address(this).balance
+            );
         } else {
             uint256 balance = IERC20(_currency).balanceOf(address(this));
 
@@ -125,7 +140,7 @@ contract AnyFunder is Ownable {
                 CurrencyTransfer.transferERC20(
                     _currency,
                     address(this),
-                    _owner,
+                    _paymentReceiver,
                     balance
                 );
             }
@@ -134,7 +149,7 @@ contract AnyFunder is Ownable {
 
     // Override `transferOwnership` to change the `_owner` in this contract.
     function transferOwnership(address newOwner) public override onlyOwner {
-        _owner = payable(newOwner);
+        _owner = newOwner;
         super.transferOwnership(newOwner);
     }
 }

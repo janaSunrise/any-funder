@@ -1,6 +1,6 @@
 # Any funder
 
-Decentralized sponsorship and funding app for anyone. ✨
+Decentralized sponsorship for everyone ✨
 
 ## 📚 Project walkthrough
 
