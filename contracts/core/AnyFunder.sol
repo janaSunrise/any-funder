@@ -89,11 +89,11 @@ contract AnyFunder is Ownable {
         return total;
     }
 
-    /// @dev Pay a custom amount of specific currency.
+    /// @dev Pay a custom amount of specific currency
     function pay(
         address userCurrency,
         uint256 amount,
-        string memory message // Optional message to be displayed in the history.
+        string memory message // Optional message to be displayed in the history
     ) public payable {
         if (userCurrency == Constants.NATIVE_TOKEN) {
             require(
