@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+
+import "./core/AnyFunder.sol";
 
 contract AppRegistry is AccessControlEnumerable {
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
@@ -42,16 +44,16 @@ contract AppRegistry is AccessControlEnumerable {
         _;
     }
 
-    function getUserDeployment(address user)
-        public
-        view
-        deploymentExists(user, true)
-        returns (address)
-    {
+    function getUserDeployment(
+        address user
+    ) public view deploymentExists(user, true) returns (address) {
         return _applications[user];
     }
 
-    function add(address user, address deployment)
+    function add(
+        address user,
+        address deployment
+    )
         public
         deploymentExists(user, false)
         isContract(deployment)
@@ -62,11 +64,9 @@ contract AppRegistry is AccessControlEnumerable {
         emit ApplicationRegistered(user, deployment);
     }
 
-    function remove(address user)
-        public
-        deploymentExists(user, true)
-        isOperatorOrOwner(user)
-    {
+    function remove(
+        address user
+    ) public deploymentExists(user, true) isOperatorOrOwner(user) {
         address app = _applications[user];
 
         delete _applications[user];

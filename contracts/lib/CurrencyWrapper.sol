@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.10;
 
 import {IWETH} from "../interfaces/IWETH.sol";
 
@@ -12,9 +12,10 @@ library CurrencyWrapper {
         IWETH(wrappedCurrency).withdraw(amount);
     }
 
-    function wrapNativeAndTransfer(address wrappedCurrency, uint256 amount)
-        internal
-    {
+    function wrapNativeAndTransfer(
+        address wrappedCurrency,
+        uint256 amount
+    ) internal {
         wrap(wrappedCurrency, amount);
 
         bool success = IWETH(wrappedCurrency).transfer(msg.sender, amount);

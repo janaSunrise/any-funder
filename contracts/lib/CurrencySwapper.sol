@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.10;
 
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
@@ -19,7 +19,7 @@ library CurrencySwapper {
     ) internal returns (uint256) {
         bool isTokenInNative = tokenIn == Constants.NATIVE_TOKEN;
 
-        // If the `tokenIn` is the same as the `tokenOut`, we can just transfer the amount directly.
+        // If the `tokenIn` is the same as the `tokenOut`, we can just transfer the amount directly
         if (tokenIn == tokenOut) {
             if (isTokenInNative) {
                 CurrencyTransfer.transferNativeToken(recipient, amount);
